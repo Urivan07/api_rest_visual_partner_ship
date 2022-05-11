@@ -6,7 +6,7 @@ describe("Test StudentService", () => {
         expect(students[0]).toHaveProperty("haveCertification")
         expect(students[0]).toHaveProperty("name")
         expect(students[0]).toHaveProperty("email")
-        expect(students[0]).toHaveProperty("username")
+        expect(students[0]).toHaveProperty("credits")
         expect(students.length).toBeGreaterThan(0)
     })
 })
