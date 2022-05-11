@@ -17,7 +17,7 @@ describe("Test StudentService", () => {
         expect(mailsOfStudents).toContain("Todd@visualpartnership.xyz");
     });
     test("Requerimiento 3 consultar todos los estudiantes que tengan credits mayor a 500", ()=>{
-        const StudentsByCredits = StudentService.getStudentsByCredits(students, 500);
+        const StudentsByCredits = StudentService.getStudentsByCredits(students);
         expect(StudentsByCredits[0].name).toContain("Warren");
         expect(StudentsByCredits[0].credits).toBe(508);
         expect(StudentsByCredits[0].enrollments).toContain("Visual Thinking Intermedio");

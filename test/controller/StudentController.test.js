@@ -14,16 +14,10 @@ describe("Test StudentController", ()=>{
         expect(mailsOfStudents.length).toBeGreaterThan(0);
         expect(mailsOfStudents).toContain("Mcpherson@visualpartnership.xyz");
     });
-    test("Consulta todos los estudiantes que tengan credits mayor a 800", ()=>{
-        const StudentsByCredits = StudentController.getStudentsByCredits(800);
-        expect(StudentsByCredits[0].name).toContain("Phillips");
-        expect(StudentsByCredits.length).toBe(9);
-        expect(StudentsByCredits[0].credits).toBe(973);
-    });
-    test("Consulta todos los estudiantes que tengan credits mayor a 200", ()=>{
-        const StudentsByCredits = StudentController.getStudentsByCredits(200);
+    test("Consulta todos los estudiantes que tengan credits mayor a 500", ()=>{
+        const StudentsByCredits = StudentController.getStudentsByCredits();
         expect(StudentsByCredits[0].name).toContain("Warren");
-        expect(StudentsByCredits.length).toBe(49);
+        expect(StudentsByCredits.length).toBe(27);
         expect(StudentsByCredits[0].credits).toBe(508);
     });
 });
