@@ -9,13 +9,8 @@ describe("Test StudentController", ()=>{
         expect(students[0]).toHaveProperty("credits");
         expect(students.length).toBeGreaterThan(0);
     });
-    test("Consulta los emails de todos los estudiantes que tengan no certificación", ()=>{
-        const mailsOfStudents = StudentController.getStudentsByCerification(false);
-        expect(mailsOfStudents.length).toBeGreaterThan(0);
-        expect(mailsOfStudents).toContain("Camacho@visualpartnership.xyz");
-    });
     test("Consulta los emails de todos los estudiantes que tengan certificación", ()=>{
-        const mailsOfStudents = StudentController.getStudentsByCerification(true);
+        const mailsOfStudents = StudentController.getStudentsByCerification();
         expect(mailsOfStudents.length).toBeGreaterThan(0);
         expect(mailsOfStudents).toContain("Mcpherson@visualpartnership.xyz");
     });

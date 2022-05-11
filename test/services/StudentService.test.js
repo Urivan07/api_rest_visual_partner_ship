@@ -12,7 +12,7 @@ describe("Test StudentService", () => {
         expect(students.length).toBeGreaterThan(0);
     });
     test("Requerimiento 2 consultar los emails de todos los estudiantes que tengan certificación", ()=>{
-        const mailsOfStudents = StudentService.getStudentsByCerification(students, true);
+        const mailsOfStudents = StudentService.getStudentsByCerification(students);
         expect(mailsOfStudents.length).toBeGreaterThan(0);
         expect(mailsOfStudents).toContain("Todd@visualpartnership.xyz");
     });
