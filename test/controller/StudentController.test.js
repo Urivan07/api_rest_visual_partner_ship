@@ -1,7 +1,7 @@
 const StudentController = require("./../../lib/controller/StudentController");
 
 describe("Test StudentController", ()=>{
-    test("Consultar todos los estudiantes con todos sus campo", () =>{
+    test("Consulta todos los estudiantes con todos sus campo", () =>{
         const students = StudentController.getStudents();
         expect(students[0]).toHaveProperty("haveCertification");
         expect(students[0]).toHaveProperty("name");
@@ -9,14 +9,26 @@ describe("Test StudentController", ()=>{
         expect(students[0]).toHaveProperty("credits");
         expect(students.length).toBeGreaterThan(0);
     });
-    test("Consultar los emails de todos los estudiantes que tengan no certificación", ()=>{
+    test("Consulta los emails de todos los estudiantes que tengan no certificación", ()=>{
         const mailsOfStudents = StudentController.getStudentsByCerification(false);
         expect(mailsOfStudents.length).toBeGreaterThan(0);
         expect(mailsOfStudents).toContain("Camacho@visualpartnership.xyz");
     });
-    test("Consultar los emails de todos los estudiantes que tengan certificación", ()=>{
+    test("Consulta los emails de todos los estudiantes que tengan certificación", ()=>{
         const mailsOfStudents = StudentController.getStudentsByCerification(true);
         expect(mailsOfStudents.length).toBeGreaterThan(0);
         expect(mailsOfStudents).toContain("Mcpherson@visualpartnership.xyz");
+    });
+    test("Consulta todos los estudiantes que tengan credits mayor a 800", ()=>{
+        const StudentsByCredits = StudentController.getStudentsByCredits(800);
+        expect(StudentsByCredits[0].name).toContain("Phillips");
+        expect(StudentsByCredits.length).toBe(9);
+        expect(StudentsByCredits[0].credits).toBe(973);
+    });
+    test("Consulta todos los estudiantes que tengan credits mayor a 200", ()=>{
+        const StudentsByCredits = StudentController.getStudentsByCredits(200);
+        expect(StudentsByCredits[0].name).toContain("Warren");
+        expect(StudentsByCredits.length).toBe(49);
+        expect(StudentsByCredits[0].credits).toBe(508);
     });
 });
