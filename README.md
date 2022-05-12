@@ -12,85 +12,104 @@ DB en formato JSON de los estudiantes de Visual Partner-Ship: https://gist.githu
 3. Habilitar un endpoint para consultar todos los estudiantes que tengan credits mayor a 500.
 ```
 
-## Estructura del proyecto
-### /lib/utils/Reader: Script para leer la informacion de los estudiantes de Visual Partner-Ship utilizando el módulo File System de Node.js.
-* Metodo:
-```javascript
-const fs = require("fs");
+## Diseño de componentes
+Se diseñaron 4 componentes principales para la funcionalidad del proyecto los cuales constan de:
+```mermaid
+flowchart TD
+    A[Server] --> B[StudentController]
+    B --> C[StudentService]
+```
+* server: Script para montar el servidor con Express Server y creacion de endpoints necesarios para el proyecto.
+* Reader: Script para leer la informacion de los estudiantes de Visual Partner-Ship en formato JSON utilizando el módulo File System de Node.js.
+* StudentController: Script para conectar la funcionalidad con el servicio StudentService.
+* StudentService: En este servicio se realizan todas las operaciones de filtrado y mapeo que se necesitan.
 
-class Reader{
+
+
+### Clases utilizadas para La consulta de la informacion de los estudiantes: 
+```mermaid
+ classDiagram
+      class Reader{
+          +static readJsonFile(file)
+      }
+      class StudentController{
+          +static getStudents()
+          +static getStudentsByCerification()
+          +static getStudentsByCredits()
+      }
+      class StudentService{
+          +static getStudents()
+          +static getStudentsByCerification(students)
+          +static getStudentsByCredits(students)
+      }
+
+```
+
+## Reader
+* readJsonFile(): Recibe la direccion del archivo de tipo JSON y regresa los datos en un objeto.
+```javascript
     static readJsonFile(path){
         const rawdata = fs.readFileSync(path);
         return JSON.parse(rawdata);
     }
-}
 ```
-### /lib/services/StudentService : En este servicio se realizan todas las operaciones de filtrado y mapeo que se necesitan.
-* Metodos:
+## StudentService
+* getStudents() : Utilizando el metodo readJsonFile obtiene los estudiantes pertenecientes a Visual Partner Ship y retorna la informacion
 ```javascript
     static getStudents() {
         const students = Reader.readJsonFile("visualpartners.json");
         return students;
     }
+```
+* getStudentsByCerification(students): Obtiene los correos de los estudiantes que cuentan con certificacion en base a la lista de estudiantes registrados.
+```javascript
     static getStudentsByCerification(students){
         const studentsByCertification = students.filter((student) => student.haveCertification == true);
         const mailsOfStudents = studentsByCertification.map((student) => student.email);
         return mailsOfStudents;
     }
+```
+* getStudentsByCredits(students): Obtiene todos los estudiantes los cuales tienen creditos mayor a 500 en base a la lista de estudiantes registrados.
+```javascript
     static getStudentsByCredits(students){
         const StudentsByCredits = students.filter((student)=> student.credits > 500);
         return StudentsByCredits;
     }
 ```
-### lib/controller/StudentController : Script para conectar la funcionalidad con el servicio StudentService.
-* Metodos:
+## StudentController.
+* getStudents(): Consume el metodo getStudents de la clase StudentService el cual retorna todos los estudiantes registrados.
 ```javascript
     static getStudents() {
         return StudentService.getStudents();
     }
+```
+* getStudentsByCerification(): Consume el metodo getStudentsByCerification de la clase StudentService el cual retorna los emails de los estudiantes registrados que cuentan con certificacion.
+```javascript
     static getStudentsByCerification() {
         const students = Reader.readJsonFile("visualpartners.json");
         return StudentService.getStudentsByCerification(students);
     }
+```
+* getStudentsByCredits():Consume el metodo getStudentsByCredits de la clase StudentService el cual retorna los estudiantes registrados que cuentan con creditos mayor a 500.
+```javascript
     static getStudentsByCredits(){
         const students = Reader.readJsonFile("visualpartners.json");
         return StudentService.getStudentsByCredits(students);
     }
 ```
-### lib/server : Script para montar el servidor con Express Server y creacion de endpoints necesarios para el proyecto.
-* APIs:
-```javascript
-app.get("/v1/students", (req, res) => {
-    const students = StudentController.getStudents();
-    res.json(students);
-});
-app.get("/v1/students/emails", (req, res) => {
-    const mailsByCertification = StudentController.getStudentsByCerification();
-    res.json(mailsByCertification);
-});
-app.get("/v1/students/credits", (req, res) => {
-    const StudentsByCredits = StudentController.getStudentsByCredits();
-    res.json(StudentsByCredits);
-});
-```
-### Capturas de ejemplo de consulta utilizando los endpoints configurados:
-* Requerimiento 1:
-```
-1. Habilitar un endpoint para consultar todos los estudiantes con todos sus campos.
-```
-![req1](https://github.com/Urivan07/api_rest_visual_partner_ship/blob/master/lib/assets/api_rest/v1_students.JPG)
-* Requerimiento 2:
-```
-2. Habilitar un endpoint para consultar los emails de todos los estudiantes que tengan certificación haveCertification.
-```
-![req2](https://github.com/Urivan07/api_rest_visual_partner_ship/blob/master/lib/assets/api_rest/v1_students_emails.JPG)
-* Requerimiento 3:
-```
-3. Habilitar un endpoint para consultar todos los estudiantes que tengan credits mayor a 500.
-```
-![req3](https://github.com/Urivan07/api_rest_visual_partner_ship/blob/master/lib/assets/api_rest/v1_students_credits.JPG)
+## Server
+Script para montar el servidor con Express Server y creacion de endpoints necesarios para el proyecto.
 
-## Herramientas y dependencias utilizadas en el proyecto:
+### End points
+- */v1/students* : Lista la informacion de los estudiantes.
+- */v1/studentsCertificated* : Lista los correos de los alumnos con certificacion.
+- */v1/studentsWithCredits* : Lista los alumnos que tengan mas de 500 creditos.
+
+## Ejemplo de consulta desde el navegador utilizando los endpoints configurados
+![Animation](https://github.com/Urivan07/api_rest_visual_partner_ship/blob/master/lib/assets/api_rest/api_test.gif)
+
+
+## Herramientas y dependencias utilizadas en el proyecto
 ### Jest : Framework utilizado para realizar pruebas de funcionalidad, se realizaron las pruebas a los scripts utilizados en el proyecto.
 * Ejemplos de test realizados:
 ```javascript
@@ -167,7 +186,6 @@ jobs:
 ```
 * Captura GitHub Actions:<br>
 ![image](https://user-images.githubusercontent.com/99374761/167958631-f196e7ad-b805-4f92-a9f5-fd2a24d1d1c5.png)
-
 
 
 
